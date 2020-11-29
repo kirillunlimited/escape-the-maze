@@ -1,0 +1,14 @@
+{
+  "name": "rogue-game",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Kirill Ivanov",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}

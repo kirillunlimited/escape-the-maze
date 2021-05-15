@@ -1,8 +1,8 @@
-import { screenW, screenH, mapH, mapW, tileH, tileW } from './config';
+import { SCREEN, MAP, TILE } from './config';
 
 export default class Viewport {
   constructor() {
-    this.screen = [screenW, screenH];
+    this.screen = [SCREEN.WIDTH, SCREEN.HEIGHT];
     this.startTile = [0, 0];
     this.endTile = [0, 0];
     this.offset = [0, 0];
@@ -25,12 +25,12 @@ export default class Viewport {
     this.offset[1] = Math.floor((this.screen[1] / 2) - py);
 
     const tile = [
-      Math.floor(px/tileW),
-      Math.floor(py/tileH)
+      Math.floor(px/TILE.WIDTH),
+      Math.floor(py/TILE.HEIGHT)
     ];
 
-    this.startTile[0] = tile[0] - 1 - Math.ceil((this.screen[0] / 2) / tileW);
-    this.startTile[1] = tile[1] - 1 - Math.ceil((this.screen[1] / 2) / tileH);
+    this.startTile[0] = tile[0] - 1 - Math.ceil((this.screen[0] / 2) / TILE.WIDTH);
+    this.startTile[1] = tile[1] - 1 - Math.ceil((this.screen[1] / 2) / TILE.HEIGHT);
 
     if (this.startTile[0] < 0) {
       this.startTile[0] = 0;
@@ -39,14 +39,14 @@ export default class Viewport {
       this.startTile[1] = 0;
     }
 
-    this.endTile[0] = tile[0] + 1 + Math.ceil((this.screen[0] / 2) / tileW);
-    this.endTile[1] = tile[1] + 1 + Math.ceil((this.screen[1] / 2) / tileH);
+    this.endTile[0] = tile[0] + 1 + Math.ceil((this.screen[0] / 2) / TILE.WIDTH);
+    this.endTile[1] = tile[1] + 1 + Math.ceil((this.screen[1] / 2) / TILE.HEIGHT);
 
-    if (this.endTile[0] >= mapW + 1) {
-      this.endTile[0] = mapW;
+    if (this.endTile[0] >= MAP.WIDTH + 1) {
+      this.endTile[0] = MAP.WIDTH;
     }
-    if (this.endTile[1] >= mapH + 1) {
-      this.endTile[1] = mapH;
+    if (this.endTile[1] >= MAP.HEIGHT + 1) {
+      this.endTile[1] = MAP.HEIGHT;
     }
   }
 };

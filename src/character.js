@@ -1,5 +1,5 @@
-import { tileW, tileH, delayMove } from './config';
-import { isTileAvailable } from './map';
+import { TILE, DELAY_MOVE, EVENTS, } from './config';
+import { getTileEvent, isTileAvailable } from './map';
 import { stopLoop } from './loop';
 
 export default class Character {
@@ -10,11 +10,15 @@ export default class Character {
     this.dimensions = [40,40];
 
     /** Init position */
-    this.position = [this.tileFrom[0] * tileW, this.tileFrom[1] * tileH];
+    this.position = [this.tileFrom[0] * TILE.WIDTH, this.tileFrom[1] * TILE.HEIGHT];
   }
 
   setControls(controls) {
     this.controls = controls;
+  }
+
+  setLevel(level) {
+    this.level = level;
   }
 
   render(time) {
@@ -35,28 +39,38 @@ export default class Character {
     this.tileFrom = [x,y];
     this.tileTo = [x,y];
     this.position = [
-      ((tileW * x) + ((tileW - this.dimensions[0]) / 2)),
-      ((tileH * y) + ((tileH - this.dimensions[1]) / 2))
+      ((TILE.WIDTH * x) + ((TILE.WIDTH - this.dimensions[0]) / 2)),
+      ((TILE.HEIGHT * y) + ((TILE.HEIGHT - this.dimensions[1]) / 2))
     ];
+
+    const event = getTileEvent(x, y, this.level);
+
+    switch (event) {
+      case EVENTS.WIN:
+        alert('YOU WIN!');
+        break;
+      default:
+        break;
+    }
   }
 
   processMovement(t) {
     if (this.tileFrom[0] === this.tileTo[0] && this.tileFrom[1] === this.tileTo[1]) {
       return false;
     }
-    if ((t - this.timeMoved) >= delayMove) {
+    if ((t - this.timeMoved) >= DELAY_MOVE) {
       this.placeAt(this.tileTo[0], this.tileTo[1]);
       stopLoop();
     } else {
-      this.position[0] = (this.tileFrom[0] * tileW) + ((tileW - this.dimensions[0]) / 2);
-      this.position[1] = (this.tileFrom[1] * tileH) + ((tileH - this.dimensions[1]) / 2);
+      this.position[0] = (this.tileFrom[0] * TILE.WIDTH) + ((TILE.WIDTH - this.dimensions[0]) / 2);
+      this.position[1] = (this.tileFrom[1] * TILE.HEIGHT) + ((TILE.HEIGHT - this.dimensions[1]) / 2);
 
       if (this.tileTo[0] !== this.tileFrom[0]) {
-        const diff = (tileW / delayMove) * (t - this.timeMoved);
+        const diff = (TILE.WIDTH / DELAY_MOVE) * (t - this.timeMoved);
         this.position[0] += (this.tileTo[0] < this.tileFrom[0] ? 0 - diff : diff);
       }
       if (this.tileTo[1] !== this.tileFrom[1]) {
-        const diff = (tileH / delayMove) * (t - this.timeMoved);
+        const diff = (TILE.HEIGHT / DELAY_MOVE) * (t - this.timeMoved);
         this.position[1] += (this.tileTo[1] < this.tileFrom[1] ? 0 - diff : diff);
       }
       this.position[0] = Math.round(this.position[0]);
@@ -66,7 +80,7 @@ export default class Character {
   }
 
   canMoveTo(x, y) {
-    if (isTileAvailable(x, y)) {
+    if (isTileAvailable(x, y, this.level)) {
       return true;
     } else {
       stopLoop();

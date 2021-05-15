@@ -1,49 +1,24 @@
-import { mapH, mapW } from './config';
+import { EVENTS, MAP, FLOOR_TYPES, TILE_TYPES } from './config';
 import { toIndex } from './helpers';
 
-export const gameMap = [
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0,
-  0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0,
-  0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0,
-  0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
-  0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0,
-  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
-  0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0,
-  0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0,
-  0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0,
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0,
-  0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0,
-  0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0,
-  0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0,
-  0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0,
-  0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0,
-  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-];
-
-export const floorTypes = {
-  solid: 0,
-  path: 1
+const FLOOR_EVENTS = {
+  1: EVENTS.EMPTY,
+  2: EVENTS.WIN
 };
 
-export const tileTypes = {
-  0: {
-    color: '#999',
-    floor: floorTypes.solid
-  },
-  1: {
-    color: '#eee',
-    floor: floorTypes.path
-  }
+const getFloor = (x, y, level) => {
+  return TILE_TYPES[level[toIndex(x,y)]].FLOOR;
 }
 
-export const isTileAvailable = (x, y) => {
-  if (x < 0 || x >= mapW || y < 0 || y >= mapH) {
+export const isTileAvailable = (x, y, level) => {
+  if (x < 0 || x >= MAP.WIDTH || y < 0 || y >= MAP.HEIGHT) {
     return false;
   }
+  const floor = getFloor(x, y, level);
+  return floor !== FLOOR_TYPES.SOLID;
+}
 
-  return tileTypes[gameMap[toIndex(x,y)]].floor === floorTypes.path
+export const getTileEvent = (x, y, level) => {
+  const floor = getFloor(x, y, level);
+  return FLOOR_EVENTS[floor];
 }

@@ -1,4 +1,4 @@
-import { startLoop} from './loop';
+import { startLoop } from './loop';
 
 export default class Controls {
   constructor() {

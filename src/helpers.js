@@ -1,5 +1,5 @@
-import {mapW} from './config';
+import {MAP} from './config';
 
 export function toIndex(x, y) {
-  return ((y * mapW) + x);
+  return ((y * MAP.WIDTH) + x);
 }
